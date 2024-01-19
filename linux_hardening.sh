@@ -1,57 +1,54 @@
 #!/bin/bash
 
-log_message() {
-    echo "[ $(date '+%Y-%m-%d %H:%M:%S') ] $1"
+info () { echo -e "\e[32m[INFO]\e[0m ${1}" ; }
+warn () { echo -e "\e[33m[WARN]\e[0m ${1}" ; }
+error () { echo -e "\e[31m[ERROR]\e[0m ${1}" ; }
+home_dir () { getent passwd "$1" | cut -d: -f6 ; } # https://superuser.com/questions/484277/get-home-directory-by-username
+user_group () { id -G $1 ; }
+
+exit_on_fail () {
+    exit_code=$?
+    exit_message="$1"
+    ignored_codes=$2
+
+    if [ $exit_code -ne 0 ] && [[ ! ${ignored_codes[*]} =~ $exit_code ]]; then
+        error "$exit_message"
+        warn "Exiting the script"
+        exit $exit_code
+    fi
 }
 
-# Create a backup
-backup_file() {
-    local file=$1
-    local backup_file="$file.backup"
-    cp "$file" "$backup_file"
-    log_message "Backup created: $backup_file"
+
+# Example usage of the function: 
+# backup_file "/path/to/source/file_or_directory" "/path/to/destination"
+
+backup_dir="/tmp/hardening_backup"
+
+backup_files () {
+    local src=$1
+    local dest="$backup_dir"
+    
+    # Define backup filename with timestamp
+    local filename=$(basename "$src")
+    local timestamp=$(date +%Y%m%d_%H%M%S)
+    local backup_name="${filename}_backup_${timestamp}"
+    return 0
 }
 
-log_message "Starting Linux Hardening Script"
+check_root () {
+	if [ $(id -u) -ne 0 ]; then
+		error "Please run as root" 
+		exit 1
+	fi 
+}
 
-# Configure the access to files and directories
-log_message "Configuring access to files and directories"
-# chmod -R 755 !!!
 
-# Configure umask
-log_message "Configuring umask"
-umask 022
+# Creates the backup dir 
+check_root
+mkdir -p "$backup_dir"
 
-# Check passwords quality and policy
-log_message "Checking password quality and policy"
-# !!!
-
-# Configure SELinux
-# !!!
-
-# Configure firewall
-log_message "Configuring firewall (iptables)"
-iptables -A INPUT -p tcp --dport 22 -j ACCEPT
-iptables -A INPUT -p tcp --dport 80 -j ACCEPT
-iptables -A INPUT -j DROP
-
-# Configure SSH
-log_message "Configuring SSH"
-# !!!
-
-# Configure audit
-log_message "Configuring audit"
-auditctl -w /var/log/faillog -p wa
-auditctl -w /var/log/lastlog -p wa
-
-# Configure Apache HTTP server
-log_message "Configuring Apache HTTP server"
-# !!!
-
-# Restart services
-log_message "Restarting services"
-systemctl restart sshd
-systemctl restart apache2
-
-log_message "Configurations applied successfully."
-
+# Pobieranie aktualizacji systemu (security) 
+warn "Checking for security updates available..." 
+yum update -qy --security
+info "Security updates checked"
+backup_files /etc/sshd 
