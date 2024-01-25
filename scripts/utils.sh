@@ -18,6 +18,31 @@ exit_on_fail() {
     fi
 }
 
+# Function to perform an action and log it with an info message
+perform_action() {
+    local action_description="$1"
+    local action_command="$2"
+
+    info "Performing: ${action_description}..."
+    ${action_command}
+
+    exit_on_fail "Failed to ${action_description}"
+
+    info "${action_description} completed successfully"
+}
+
+# Backup files function
+backup_files() {
+    local src="$1"
+    local dest="./hardening_backup/$(date +%Y%m%d_%H%M%S)"
+
+    info "Backing up ${src} to ${dest}..."
+    cp -a "${src}" "${dest}"
+    exit_on_fail "Failed to create backup of ${src}"
+
+    info "Backup created successfully at ${dest}"
+}
+
 # Function to print a message with a timestamp
 log_message() {
     local log_level="$1"
