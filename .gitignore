@@ -1,2 +1,30 @@
+# Ignore system and backup files
+*.bak
+*~
+
+# Ignore directories
+hardening_backup/
+
+# Ignore compiled binaries
+*.o
+*.out
+
+# Ignore package files
+*.tar.gz
+*.zip
+
+# Ignore logs
+*.log
+
+# Ignore user-specific files
 .DS_Store
 .idea/
+.vscode/
+
+# Ignore dependencies
+node_modules/
+vendor/
+
+# Ignore environment-specific files
+.env
+
