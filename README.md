@@ -30,7 +30,7 @@ chmod +x scripts/rocky_hardening.sh
 
 ## License
 
-This project is licensed under the [LICENSE](LICENSE) - Unilicense.
+This project is licensed under the [LICENSE](LICENSE) - Unilicense license.
 
 ## Authors
 
