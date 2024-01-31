@@ -34,5 +34,4 @@ This project is licensed under the [Unlicense license](LICENSE).
 
 ## Authors
 
-[Danila Rusak]
-[Fatlum Zahiti]
+Danila Rusak, Fatlum Zahiti
