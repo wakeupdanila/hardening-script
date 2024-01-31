@@ -3,8 +3,6 @@
 info() { echo -e "\e[32m[INFO]\e[0m ${1}" ; }
 warn() { echo -e "\e[33m[WARN]\e[0m ${1}" ; }
 error() { echo -e "\e[31m[ERROR]\e[0m ${1}" ; }
-home_dir() { getent passwd "$1" | cut -d: -f6 ; } # https://superuser.com/questions/484277/get-home-directory-by-username
-user_group() { id -G "$1" ; }
 
 exit_on_fail() {
     exit_code=$?
@@ -21,6 +19,14 @@ exit_on_fail() {
 perform_action() {
     local action_description="$1"
     local action_command="$2"
+    local package_name="$3"
+
+    if [ -n "$package_name" ]; then
+        if yum list installed "$package_name" >/dev/null 2>&1; then
+            info "Package $package_name is already installed. Skipping action: $action_description"
+            return
+        fi
+    fi
 
     info "Performing: ${action_description}..."
     ${action_command}
