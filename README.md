@@ -6,7 +6,7 @@ This project provides a Bash script for system hardening on Rocky Linux 9. It ai
 
 ## Usage
 
-Clone and navigate to project repository.
+Clone the project repository and navigate to it.
 
 ```bash
 git clone https://github.com/wakeupdanila/hardening-script.git
