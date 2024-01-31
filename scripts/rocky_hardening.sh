@@ -59,6 +59,7 @@ perform_action "Configure dnf-automatic to automatically install updates" "echo 
 perform_action "Enable dnf-automatic timer" "systemctl enable --now dnf-automatic.timer"
 
 # Install and Configure Fail2Ban
+perform_action "Install EPEL release" "yum install -y epel-release" "epel-release"
 perform_action "Install Fail2Ban" "yum install -y fail2ban" "fail2ban"
 perform_action "Start Fail2Ban" "systemctl start fail2ban"
 perform_action "Enable Fail2Ban at boot" "systemctl enable fail2ban"
