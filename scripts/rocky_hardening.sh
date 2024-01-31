@@ -54,10 +54,9 @@ perform_action "Disable Empty Passwords" "echo 'PermitEmptyPasswords no' >> /etc
 perform_action "Disable X11 Forwarding" "echo 'X11Forwarding no' >> /etc/ssh/sshd_config"
 
 # Enable Automatic Security Updates
-perform_action "Enable Automatic Security Updates" "yum install -y yum-cron" "yum-cron"
-perform_action "Configure Automatic Security Updates" "echo 'apply_updates = yes' >> /etc/yum/yum-cron.conf"
-perform_action "Start Automatic Security Updates" "systemctl start yum-cron"
-perform_action "Enable Automatic Security Updates at boot" "systemctl enable yum-cron"
+perform_action "Install dnf-automatic" "yum install -y dnf-automatic" "dnf-automatic"
+perform_action "Configure dnf-automatic to automatically install updates" "echo 'upgrade_type = default' >> /etc/dnf/automatic.conf"
+perform_action "Enable dnf-automatic timer" "systemctl enable --now dnf-automatic.timer"
 
 # Install and Configure Fail2Ban
 perform_action "Install Fail2Ban" "yum install -y fail2ban" "fail2ban"
